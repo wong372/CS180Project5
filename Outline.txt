@@ -1,0 +1,14 @@
+Project 5 Outline: 
+
+Abstract: Project 4, with GUI, concurrency and network IO added. 
+
+Details: 
+- All interactions must take place over GUI (complex and JOPtionpane). 
+- All file operations (data writing and reading) must take place on the server. 
+- Multiple users (instances of client) must be able to connect at once. 
+- New content or changes made by one user must be visible after refresh by other users. 
+
+Problems: 
+- Might be too complicated down the road to simply separate the classes; might require a rewrite to fully implement new features. 
+- 
+
