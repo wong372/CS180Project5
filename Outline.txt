@@ -12,3 +12,10 @@ Problems:
 - Might be too complicated down the road to simply separate the classes; might require a rewrite to fully implement new features. 
 - 
 
+TODO:
+- create a log out button (make sure program doesn't end // i think that would kick all concurrent users out of the program as well)
+- create a refresh button
+- implement concurrency
+
+DONE? (move from TODO instead of deleting)
+- 
