@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  *
  * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 02 -- Challenge</p>
  *
- * @author Katie Testin
+ * @author Katie, Aaron, Ashley, Krish, Saahil
  * @version April 11, 2021
  */
 import java.util.Scanner;
@@ -65,7 +65,7 @@ public class Quiz {
         return userExists;
     }
 
-    public void writeFileForSignUp(String fileName, String username, String password, String role) {
+    public void writeFileForSignUp(String fileName, String username, String password, int role) {
         try {
             FileWriter myWriter = new FileWriter(fileName, true);
             myWriter.write(username + "," + password + "," + role + "\n");
