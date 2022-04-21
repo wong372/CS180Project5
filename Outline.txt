@@ -19,3 +19,6 @@ TODO:
 
 DONE? (move from TODO instead of deleting)
 - 
+
+Optional:
+- change from dropdown menu to selecting an answer choice in a quiz using jRadioButton (in Swing toolkit)
