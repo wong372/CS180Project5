@@ -14,7 +14,9 @@ Problems:
 
 TODO:
 - create a log out button (make sure program doesn't end // i think that would kick all concurrent users out of the program as well)
-- create a refresh button
+- create a refresh button // maybe include "volatile keyword"
+  - "If a variable is declared with the volatile keyword then it is guaranteed that any thread that reads the field will see the most recently written value. The volatile keyword will not perform any mutual exclusive lock on the variable."
+    - https://www.vogella.com/tutorials/JavaConcurrency/article.html (Section 3.3)
 - implement concurrency
 - synchronize access to quizzes to one teacher at a time // each quiz should only be graded by one teacher one time
 
