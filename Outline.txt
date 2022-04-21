@@ -16,6 +16,7 @@ TODO:
 - create a log out button (make sure program doesn't end // i think that would kick all concurrent users out of the program as well)
 - create a refresh button
 - implement concurrency
+- synchronize access to quizzes to one teacher at a time // each quiz should only be graded by one teacher one time
 
 DONE? (move from TODO instead of deleting)
 - 
