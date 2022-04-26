@@ -73,7 +73,7 @@ public class QuizClient {
             signUpOrLogIn = (String) JOptionPane.showInputDialog(null,
                     "Choose an option to continue",
                     "University Card", JOptionPane.QUESTION_MESSAGE, null, options1,
-                    options1[0]);
+                    options1[1]);
 
             writer.write(signUpOrLogIn);
             writer.println();
@@ -191,8 +191,8 @@ public class QuizClient {
                     loginSuccess = false;
                 } else {
                     loginSuccess = true;
+                    accountContinue = true;
                 }
-                accountContinue = true;
             }
 
     /*
@@ -201,7 +201,9 @@ public class QuizClient {
 
         } while (!accountContinue) ; // end of finished code
         if (role1 == 1) {
-            SwingUtilities.invokeLater(new TeacherGUI()); // Teacher GUI
+            SwingUtilities.invokeLater(new TeacherGUI(username, role1)); // Teacher GUI
+        } else if (role1 == 2) {
+            SwingUtilities.invokeLater(new StudentGUI(username, role1)); //Student GUI
         }
 
         }

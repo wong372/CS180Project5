@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Student {
 
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(f, true);
+            fos = new FileOutputStream(f);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -47,7 +48,7 @@ public class Student {
             try {
                 FileInputStream fis = new FileInputStream(fOriginal);
             } catch (FileNotFoundException e) {
-                System.out.println("There is no graded submission available for this quiz.");
+
                 e.printStackTrace();
             }
             FileReader fr = null;
@@ -67,7 +68,8 @@ public class Student {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("There is no graded submission available.");
+            JOptionPane.showMessageDialog(null, "There is no graded submission available.",
+                    null, JOptionPane.INFORMATION_MESSAGE);
             studentAnswers.add("None");
         }
 
@@ -101,7 +103,8 @@ public class Student {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("File with responses did not exist.");
+            JOptionPane.showMessageDialog(null, "File with responses did not exist.",
+                    null, JOptionPane.INFORMATION_MESSAGE);
             studentResponses.add("None");
         }
         return studentResponses;

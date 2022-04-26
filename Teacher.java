@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -105,7 +106,8 @@ public class Teacher {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("This course does not exist.");
+            JOptionPane.showMessageDialog(null, "This course does not exist.",
+                    null, JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
@@ -169,7 +171,6 @@ public class Teacher {
 
             pw.close();
         } else {
-            System.out.println("There are no current courses.");
             allCourses.add("None");
         }
 
@@ -181,7 +182,8 @@ public class Teacher {
         ArrayList<String> allQuestions = new ArrayList<String>();
         try {
             if (f.createNewFile()) {
-                System.out.println("There are no current questions.");
+                JOptionPane.showMessageDialog(null, "There are no current questions.",
+                        null, JOptionPane.INFORMATION_MESSAGE);
                 allQuestions.add("None");
             } else {
                 FileInputStream fis = new FileInputStream(f);
@@ -193,7 +195,8 @@ public class Teacher {
 
                 // check if the order needs to be randomized
                 if (line == null) {
-                    System.out.println("File is empty");
+                    JOptionPane.showMessageDialog(null, "File is empty.",
+                            null, JOptionPane.INFORMATION_MESSAGE);
                     allQuestions.add("None");
                 } else {
                     if (line.equals("1")) { //RANDOMIZATION
@@ -265,7 +268,8 @@ public class Teacher {
 
         try {
             if (f.createNewFile()) {
-                System.out.println("There are no current quizzes.");
+                JOptionPane.showMessageDialog(null, "There are no current quizzes.",
+                        null, JOptionPane.INFORMATION_MESSAGE);
                 allQuizzes.add("None");
 
             } else {
@@ -323,7 +327,8 @@ public class Teacher {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("There is no student submission for this quiz.");
+            JOptionPane.showMessageDialog(null, "There is no student submission for this quiz.",
+                    null, JOptionPane.INFORMATION_MESSAGE);
             studentAnswers.add("No submission");
         }
 
@@ -336,7 +341,7 @@ public class Teacher {
 
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(fNew, true);
+            fos = new FileOutputStream(fNew);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -352,11 +357,12 @@ public class Teacher {
         pw.close();
     }
 
-    public void writeQuizFromFile(String selectedCourse, String fileName) {
+    public String writeQuizFromFile(String selectedCourse, String fileName) {
         boolean fExists = new File(fileName).isFile();
         File fCourse = new File(selectedCourse + ".txt");
         ArrayList<String> teacherQuestions = new ArrayList<String>();
 
+        String quizName = "";
         if (fExists) {
             File fileWithQuestions = new File(fileName);
             try {
@@ -372,7 +378,7 @@ public class Teacher {
             }
             BufferedReader bfr = new BufferedReader(fr);
             String line;
-            String quizName = "";
+            quizName = "";
 
             try {
                 quizName = bfr.readLine();
@@ -414,9 +420,11 @@ public class Teacher {
             pw.close();
 
         } else {
-            System.out.println("That file of questions did not exist");
+            JOptionPane.showMessageDialog(null, "That file of questions did not exist",
+                    "University Card", JOptionPane.INFORMATION_MESSAGE);
             teacherQuestions.add("None");
         }
+        return quizName;
     }
 
 

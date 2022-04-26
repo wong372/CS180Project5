@@ -39,14 +39,7 @@ public class QuizServer {
         int selectOrCreate = 0;
         File logins = new File(LOGINFILENAME);
         logins.createNewFile();
-        int createDeleteEditQuiz = 0;
-        int courseSelectAddQuit = 0;
-        int continueToAnotherQuestion = 0;
-        int anotherAnswerChoice = 0;
-        int randomizedOrNot = 0;
-        int anotherQuestion = 0;
-        int selectOrCreate1 = 0;
-        int manuallyOrFromFile = 0;
+        String selectedCourse;
 
         ServerSocket serverSocket = new ServerSocket(4242);
 
@@ -146,5 +139,19 @@ public class QuizServer {
                 }
             }
         } while (!accountContinue); // end of finished code
+        if (role1 == 1) { // loop for if the user is a teacher
+            String chosenOption;
+            boolean continue1 = true;
+            while (continue1) {
+                chosenOption = reader.readLine();
+                if (chosenOption.equals("courseSelect")) { // client has selected to select course
+                    selectedCourse = reader.readLine();
+
+                }
+            }
+
+        } else if (role1 == 2) { // loop for if the user is student
+
+        }
     }
 }
