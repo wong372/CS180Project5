@@ -19,6 +19,7 @@ TODO:
     - https://www.vogella.com/tutorials/JavaConcurrency/article.html (Section 3.3)
 - implement concurrency
 - synchronize access to quizzes to one teacher at a time // each quiz should only be graded by one teacher one time
+- polish code (update javadocs, comment, coding style check, remove commented code)
 
 DONE? (move from TODO instead of deleting)
 - 
