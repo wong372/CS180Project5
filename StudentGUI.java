@@ -22,8 +22,9 @@ public class StudentGUI extends JComponent implements Runnable {
 
     String selectedCourse;
     String selectedQuiz;
-    ArrayList<String> courses;
-    ArrayList<String> totalQuizzes;
+    ArrayList<String> courses = new ArrayList<>();
+    ArrayList<String> totalQuizzes = new ArrayList<>();
+    ArrayList<String> studentSelectedQuestions = new ArrayList<>();
     String newPassword;
     File LOGINFILENAME = new File("logins.txt");
     String username;
@@ -38,6 +39,7 @@ public class StudentGUI extends JComponent implements Runnable {
     JButton quizViewGradeButton;
     JLabel center;
 
+
     JButton editPasswordButton;
     JButton deleteAccountButton;
 
@@ -45,6 +47,7 @@ public class StudentGUI extends JComponent implements Runnable {
 
 
     public void run() {
+
         JFrame frame = new JFrame();
         frame.setTitle("Student");
         Container content = frame.getContentPane();
@@ -107,34 +110,60 @@ public class StudentGUI extends JComponent implements Runnable {
         editLeave.add(editPasswordButton);
         editLeave.add(deleteAccountButton);
         content.add(editLeave, BorderLayout.SOUTH);
-        Socket socket = null;
-        try {
-            socket = new Socket("localhost", 4242);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        PrintWriter writer2 = null;
-        try {
-            writer2 = new PrintWriter(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        PrintWriter finalWriter = writer2;
         courseSelectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                finalWriter.write("courseSelect"); // write the chosen path to server
                 selectedCourse = courseOptions.getSelectedItem().toString();
-                finalWriter.write(selectedCourse); // write the selected course to server
-                totalQuizzes = t.displayQuizzes(selectedCourse);
-                quizOptions.removeAllItems();
+                Socket socket = null;
+                try {
+                    socket = new Socket("localhost", 4243);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(socket.getOutputStream());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                writer.write("courseSelect");
+                writer.println();
+                writer.flush();
+
+                writer.write(selectedCourse);
+                writer.println();
+                writer.flush(); // write the selected course to server
+
+
+                String totalQuizzesString = "";
+                try {
+                    totalQuizzesString = reader.readLine(); //  read the quizzes from the server
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                String[] totalQuizzesArray = totalQuizzesString.split("/");
+
+                totalQuizzes.clear();
+
+                int counter = 0;
+                while (counter < totalQuizzesArray.length) {
+                    totalQuizzes.add(totalQuizzesArray[counter]);
+                    counter++;
+                }
+
+                quizOptions.removeAllItems(); // take out the current quizzes
                 int i = 0;
                 while (i < totalQuizzes.size()) {
                     quizOptions.addItem(totalQuizzes.get(i));
@@ -142,8 +171,37 @@ public class StudentGUI extends JComponent implements Runnable {
                 }
             }
         });
+
+        //EDIT PASSWORD
         editPasswordButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Socket socket = null;
+                try {
+                    socket = new Socket("localhost", 4243);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(socket.getOutputStream());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                writer.write("editPassword");
+                writer.println();
+                writer.flush();
+
                 do {
                     newPassword = JOptionPane.showInputDialog(null, "What is your new" +
                                     "password?",
@@ -157,36 +215,110 @@ public class StudentGUI extends JComponent implements Runnable {
 
                 } while ((newPassword == null) || (newPassword.isEmpty()));
 
-                try {
-                    quiz.rewriteFile(String.valueOf(LOGINFILENAME), username);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                quiz.writeFileForSignUp(String.valueOf(LOGINFILENAME), username, newPassword, role);
+                writer.write(newPassword);
+                writer.println();
+                writer.flush();
 
                 JOptionPane.showMessageDialog(null, "Password Changed!",
                         null, JOptionPane.INFORMATION_MESSAGE);
             }
         });
+
+        // DELETE ACCOUNT
         deleteAccountButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Socket socket = null;
                 try {
-                    boolean success = quiz.rewriteFile(String.valueOf(LOGINFILENAME), username);
+                    socket = new Socket("localhost", 4243);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(socket.getOutputStream());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                writer.write("deleteAccount");
+                writer.println();
+                writer.flush();
+
+                writer.write(username); // write the username to server
+                writer.println();
+                writer.flush();
+
                 JOptionPane.showMessageDialog(null, "Account was successfully deleted!",
                         null, JOptionPane.INFORMATION_MESSAGE);
                 frame.dispose();
             }
         });
+
+        // TAKE QUIZ
         quizTakeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Socket socket = null;
+                try {
+                    socket = new Socket("localhost", 4243);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(socket.getOutputStream());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                writer.write("takeQuiz");
+                writer.println();
+                writer.flush();
+
                 selectedQuiz = quizOptions.getSelectedItem().toString();
-                Student s = new Student(username);
 
+                writer.write(selectedQuiz); // write the selected quiz to server
+                writer.println();
+                writer.flush();
 
-                ArrayList<String> studentSelectedQuestions = t.displayQuestions(selectedQuiz, selectedCourse);
+                writer.write(selectedCourse);
+                writer.println();
+                writer.flush();
+
+                String studentSelectedString = "";
+                try {
+                    studentSelectedString = reader.readLine(); //  read the questions from the server
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                String[] studentSelectedArray = studentSelectedString.split(">");
+                System.out.println(studentSelectedString);
+
+                int counter = 0;
+                while (counter < studentSelectedArray.length) {
+                    studentSelectedQuestions.add(studentSelectedArray[counter]);
+                    counter++;
+                }
 
                 if (!((studentSelectedQuestions.get(0)).equals("None"))) {
                     String nameOfQuiz = "";
@@ -197,6 +329,11 @@ public class StudentGUI extends JComponent implements Runnable {
                             "Choose an option to continue",
                             "Sign Up", JOptionPane.QUESTION_MESSAGE, null, options2,
                             options2[0]);
+
+                    writer.write(manuallyOrFromFile);
+                    writer.println();
+                    writer.flush();
+
                     String filename;
                     if (manuallyOrFromFile.equals("File")) {
                         do {
@@ -211,31 +348,12 @@ public class StudentGUI extends JComponent implements Runnable {
 
                         } while ((filename == null) || (filename.isEmpty()));
 
-                        ArrayList<String> studentResponses =
-                                s.getStudentResponsesFromFile(filename);
+                        writer.write("filename");
+                        writer.println();
+                        writer.flush();
 
-                        if (!((studentResponses.get(0)).equals("None"))) {
-                            int c8 = 0;
-                            ArrayList<String> studentAnswerAndQuestion = new ArrayList<String>();
-
-                            while (c8 < studentSelectedQuestions.size()) {
-                                String[] questionAndAnswerSplitUp =
-                                        (studentSelectedQuestions.get(c8)).split("/");
-
-                                String studentAnswer = studentResponses.get(c8);
-                                studentAnswerAndQuestion.add(studentSelectedQuestions.get(c8) +
-                                        "/Answer: " + studentAnswer + "\n");
-                                c8++;
-                            }
-
-                            LocalDateTime date = LocalDateTime.now();
-
-                            s.createStudentSubmission(studentAnswerAndQuestion,
-                                    selectedQuiz, date,
-                                    selectedCourse);
-                            JOptionPane.showMessageDialog(null, "Quiz Submission Recorded",
-                                    null, JOptionPane.INFORMATION_MESSAGE);
-                        }
+                        JOptionPane.showMessageDialog(null, "Quiz Submission Recorded",
+                                null, JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         int counter8 = 0;
                         ArrayList<String> studentAnswerAndQuestion = new ArrayList<String>();
@@ -245,7 +363,6 @@ public class StudentGUI extends JComponent implements Runnable {
                         while (counter8 < studentSelectedQuestions.size()) {
                             String[] questionAndAnswerSplitUp =
                                     (studentSelectedQuestions.get(counter8)).split("/");
-
                             print = "Question: " + questionAndAnswerSplitUp[0];
 
                             // loop through all of the answer choices
@@ -255,26 +372,26 @@ public class StudentGUI extends JComponent implements Runnable {
                                 counter18++;
                             }
                             String[] options3 = new String[answerChoices.size()];
-                            int counter = 0;
-                            while (counter < answerChoices.size()) {
-                                options3[counter] = answerChoices.get(counter);
-                                counter++;
+                            int counter3 = 0;
+                            while (counter3 < answerChoices.size()) {
+                                options3[counter3] = answerChoices.get(counter3);
+                                counter3++;
                             }
                             String studentAnswer = (String) JOptionPane.showInputDialog(null,
                                     print,
                                     null, JOptionPane.QUESTION_MESSAGE, null, options3,
                                     options3[0]);
 
-                            studentAnswerAndQuestion.add(studentSelectedQuestions.get(counter8) +
-                                    "/Answer: " + studentAnswer + "\n");
+                            String x = studentSelectedQuestions.get(counter8) +
+                                    "/Answer: " + studentAnswer;
+
+                            writer.write(x);
+                            writer.println();
+                            writer.flush();
+
                             counter8++;
                             answerChoices.clear();
                         }
-
-                        LocalDateTime date = LocalDateTime.now();
-
-                        s.createStudentSubmission(studentAnswerAndQuestion, selectedQuiz,
-                                date, selectedCourse);
                         JOptionPane.showMessageDialog(null, "Quiz Submission Recorded",
                                 null, JOptionPane.INFORMATION_MESSAGE);
                     }
@@ -282,33 +399,55 @@ public class StudentGUI extends JComponent implements Runnable {
 
             }
         });
+
+        // VIEW GRADE
         quizViewGradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Student s = new Student(username);
+                Socket socket = null;
+                try {
+                    socket = new Socket("localhost", 4243);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(socket.getOutputStream());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                writer.write("viewGrade");
+                writer.println();
+                writer.flush();
 
                 String quizNameGrades = quizOptions.getSelectedItem().toString();
-                ArrayList<String> gradedSubmissions = s.viewGradedSubmission(quizNameGrades,
-                                selectedCourse);
 
-                if (!(gradedSubmissions.get(0).equals("None"))) {
-                    int counter21 = 0;
-                    String print = "";
+                writer.write(quizNameGrades);
+                writer.println(); // write the name of quiz to view grades for
+                writer.flush();
 
-                    while (counter21 < gradedSubmissions.size()) {
-                        String[] questionSplitUp =
-                                (gradedSubmissions.get(counter21)).split("/");
-                        print = "Question: " + questionSplitUp[0] + "\n";
+                String isThereSubmission = "";
 
-                        // loop through all of the answer choices
-                        int counter22 = 1;
-                        while (counter22 < questionSplitUp.length) {
-                            print = print + questionSplitUp[counter22] + "\n";
-                            counter22++;
-                        }
-                        counter21++;
-                        JOptionPane.showMessageDialog(null, print,
-                                null, JOptionPane.INFORMATION_MESSAGE);
+                try {
+                    isThereSubmission = reader.readLine(); // server tells if submission
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                if (isThereSubmission.equals("yes")) {
+                    String print = null;
+                    try {
+                        print = reader.readLine();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
                     }
+                    JOptionPane.showMessageDialog(null, print,
+                                null, JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "No graded submission",
                             null, JOptionPane.INFORMATION_MESSAGE);
@@ -327,18 +466,5 @@ public class StudentGUI extends JComponent implements Runnable {
         });
 
 
-    }
-
-    public void createCourse(String courseName) {
-        File f = new File("AllCourses.txt");
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(f, true);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        PrintWriter pw = new PrintWriter(fos);
-        pw.write(courseName + "\n"); // Add the course name to the list of courses file
-        pw.close();
     }
 }

@@ -23,7 +23,6 @@ public class QuizClient {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         // set up the client
-        Scanner scan = new Scanner(System.in);
 
         Socket socket = new Socket("localhost", 4242);
 
@@ -75,7 +74,7 @@ public class QuizClient {
                     "University Card", JOptionPane.QUESTION_MESSAGE, null, options1,
                     options1[1]);
 
-            writer.write(signUpOrLogIn);
+            writer.write(signUpOrLogIn); // first send
             writer.println();
             writer.flush();
 
@@ -93,7 +92,7 @@ public class QuizClient {
 
                 } while ((username == null) || (username.isEmpty()));
 
-                writer.write(username);
+                writer.write(username); // second send
                 writer.println();
                 writer.flush();
 
@@ -125,7 +124,7 @@ public class QuizClient {
                         }
                     } while (password.contains(","));
 
-                    writer.write(password);
+                    writer.write(password); // third send
                     writer.println(); // write the password to the server
                     writer.flush();
 
@@ -138,7 +137,7 @@ public class QuizClient {
                             options2[1]);
                     // Writing of credentials to the LOGINFILENAME file.
 
-                    writer.write(role);
+                    writer.write(role); // fourth send
                     writer.println(); // write the role to the server
                     writer.flush();
 
@@ -160,7 +159,7 @@ public class QuizClient {
 
                 username = username.toLowerCase();
 
-                writer.write(username);
+                writer.write(username); // fifth send
                 writer.println(); // write the username to the server
                 writer.flush();
 
@@ -177,7 +176,7 @@ public class QuizClient {
 
                 } while ((password == null) || (password.isEmpty()));
 
-                writer.write(password);
+                writer.write(password); // sixth send
                 writer.println(); // write the password to the server
                 writer.flush();
 
@@ -199,12 +198,14 @@ public class QuizClient {
     Once logged in, user is prompted to continue or edit/delete account. Only continues if they select continue.
      */
 
-        } while (!accountContinue) ; // end of finished code
+        } while (!loginSuccess) ; // end of finished code
+        writer.close();
+        reader.close();
         if (role1 == 1) {
             SwingUtilities.invokeLater(new TeacherGUI(username, role1)); // Teacher GUI
         } else if (role1 == 2) {
             SwingUtilities.invokeLater(new StudentGUI(username, role1)); //Student GUI
         }
 
-        }
+    }
 }
