@@ -42,6 +42,7 @@ public class StudentGUI extends JComponent implements Runnable {
 
     JButton editPasswordButton;
     JButton deleteAccountButton;
+    JButton logOutButton;
 
     StudentGUI studentGUI;
 
@@ -87,6 +88,7 @@ public class StudentGUI extends JComponent implements Runnable {
         // Button at the bottom
         editPasswordButton = new JButton("Edit Password");
         deleteAccountButton = new JButton("Delete Account");
+        logOutButton = new JButton("Log Out");
 
         JPanel topPanel = new JPanel();
         topPanel.setBackground(color);
@@ -109,6 +111,7 @@ public class StudentGUI extends JComponent implements Runnable {
         JPanel editLeave = new JPanel();
         editLeave.add(editPasswordButton);
         editLeave.add(deleteAccountButton);
+        editLeave.add(logOutButton);
         content.add(editLeave, BorderLayout.SOUTH);
 
         courseSelectButton.addActionListener(new ActionListener() {
@@ -397,6 +400,12 @@ public class StudentGUI extends JComponent implements Runnable {
                     }
                 }
 
+            }
+        });
+
+        logOutButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
             }
         });
 

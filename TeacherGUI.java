@@ -45,6 +45,7 @@ public class TeacherGUI extends JComponent implements Runnable {
 
     JButton editPasswordButton;
     JButton deleteAccountButton;
+    JButton logOutButton;
 
     TeacherGUI teacherGUI;
 
@@ -95,6 +96,7 @@ public class TeacherGUI extends JComponent implements Runnable {
         // Button at the bottom
         editPasswordButton = new JButton("Edit Password");
         deleteAccountButton = new JButton("Delete Account");
+        logOutButton = new JButton("Log Out");
 
         JPanel topPanel = new JPanel();
         topPanel.setBackground(color);
@@ -123,8 +125,16 @@ public class TeacherGUI extends JComponent implements Runnable {
         JPanel editLeave = new JPanel();
         editLeave.add(editPasswordButton);
         editLeave.add(deleteAccountButton);
+        editLeave.add(logOutButton);
         content.add(editLeave, BorderLayout.SOUTH);
 
+        logOutButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
+
+        // SELECT COURSE
         courseSelectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 selectedCourse = courseOptions.getSelectedItem().toString();
@@ -258,20 +268,23 @@ public class TeacherGUI extends JComponent implements Runnable {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
                 PrintWriter writer = null;
                 try {
                     writer = new PrintWriter(socket.getOutputStream());
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                writer.write("courseSelect");
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                writer.write("createQuiz");
                 writer.println();
                 writer.flush();
+
                 ArrayList<String> quizQuestions = new ArrayList<String>();
 
                 String nameOfQuiz = "";
@@ -283,7 +296,11 @@ public class TeacherGUI extends JComponent implements Runnable {
                         "Sign Up", JOptionPane.QUESTION_MESSAGE, null, options2,
                         options2[0]);
                 String filename;
-                Teacher t = new Teacher();
+
+                writer.write(manuallyOrFromFile);
+                writer.println();
+                writer.flush();
+
                 if (manuallyOrFromFile.equals("File")) {
                     do {
                         filename = JOptionPane.showInputDialog(null, "What is the name of the file? The first line should be the title of the quizAll remaining lines should be questions with answers on the same line, separated by commas",
@@ -297,20 +314,24 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                     } while ((filename == null) || (filename.isEmpty()));
 
-                    t.writeQuizFromFile(selectedCourse, filename);
+                    writer.write(filename);
+                    writer.println();
+                    writer.flush();
+
                 } else {
                     nameOfQuiz = quizTextField.getText();
+                    writer.write(nameOfQuiz);
+                    writer.println();
+                    writer.flush();
 
                     int randomizedOrNot = JOptionPane.showConfirmDialog(null, "Would you like the quiz to be randomized?",
                             "Sign Up", JOptionPane.YES_NO_OPTION);
 
+                    writer.write(String.valueOf(randomizedOrNot));
+                    writer.println();
+                    writer.flush();
 
                     ArrayList<String> newQuestions = new ArrayList<String>();
-                    if (randomizedOrNot == JOptionPane.YES_OPTION) {
-                        quizQuestions.add(String.valueOf(1));
-                    } else if (randomizedOrNot == JOptionPane.NO_OPTION) {
-                        quizQuestions.add(String.valueOf(2));
-                    }
 
                     String quizQuestion;
 
@@ -321,12 +342,12 @@ public class TeacherGUI extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                     "University Card",
                                     JOptionPane.ERROR_MESSAGE);
-
                         } //end if
-
                     } while ((quizQuestion == null) || (quizQuestion.isEmpty()));
 
-                    quizQuestions.add("\n" + quizQuestion);
+                    writer.write(quizQuestion);
+                    writer.println();
+                    writer.flush();
 
                     String answerChoice;
 
@@ -337,19 +358,23 @@ public class TeacherGUI extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                     "University Card",
                                     JOptionPane.ERROR_MESSAGE);
-
                         } //end if
-
                     } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
-                    quizQuestions.add("/" + answerChoice);
-
+                    writer.write(answerChoice);
+                    writer.println();
+                    writer.flush();
+                    //ended here
                     int anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                             "Sign Up", JOptionPane.YES_NO_OPTION);
 
+                    writer.write(String.valueOf(anotherAnswerChoice));
+                    writer.println();
+                    writer.flush();
+
                     while (anotherAnswerChoice == JOptionPane.YES_OPTION) {
                         do {
-                            answerChoice = JOptionPane.showInputDialog(null, "What is the first answer choice?",
+                            answerChoice = JOptionPane.showInputDialog(null, "What is the answer choice?",
                                     "Sign Up", JOptionPane.QUESTION_MESSAGE);
                             if ((answerChoice == null) || (answerChoice.isEmpty())) {
                                 JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
@@ -360,14 +385,25 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                         } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
+                        writer.write(answerChoice);
+                        writer.println();
+                        writer.flush();
 
-                        quizQuestions.add("/" + answerChoice);
                         anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                                 "Sign Up", JOptionPane.YES_NO_OPTION);
+
+                        writer.write(String.valueOf(anotherAnswerChoice));
+                        writer.println();
+                        writer.flush();
                     }
 
                     int anotherQuestion = JOptionPane.showConfirmDialog(null, "Would you like to add another question?",
                             "Sign Up", JOptionPane.YES_NO_OPTION);
+
+                    writer.write(String.valueOf(anotherQuestion));
+                    writer.println();
+                    writer.flush();
+
                     while (anotherQuestion == JOptionPane.YES_OPTION) {
 
                         do {
@@ -382,9 +418,12 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                         } while ((quizQuestion == null) || (quizQuestion.isEmpty()));
 
-                        quizQuestions.add("\n" + quizQuestion);
+                        writer.write(quizQuestion);
+                        writer.println();
+                        writer.flush();
+
                         do {
-                            answerChoice = JOptionPane.showInputDialog(null, "What is the first " +
+                            answerChoice = JOptionPane.showInputDialog(null, "What is the " +
                                             "answer choice?",
                                     "Sign Up", JOptionPane.QUESTION_MESSAGE);
                             if ((answerChoice == null) || (answerChoice.isEmpty())) {
@@ -396,10 +435,16 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                         } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
-                        quizQuestions.add("/" + answerChoice);
+                        writer.write(answerChoice);
+                        writer.println();
+                        writer.flush();
 
                         anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                                 "Sign Up", JOptionPane.YES_NO_OPTION);
+                        writer.write(String.valueOf(anotherAnswerChoice));
+                        writer.println();
+                        writer.flush();
+
                         while (anotherAnswerChoice == JOptionPane.YES_OPTION) {
                             do {
                                 answerChoice = JOptionPane.showInputDialog(null, "What is the next answer choice?",
@@ -412,17 +457,28 @@ public class TeacherGUI extends JComponent implements Runnable {
                                 } //end if
 
                             } while ((answerChoice == null) || (answerChoice.isEmpty()));
-
-                            quizQuestions.add("/" + answerChoice);
+                            writer.write(answerChoice);
+                            writer.println();
+                            writer.flush();
 
                             anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                                     "Sign Up", JOptionPane.YES_NO_OPTION);
+
+                            writer.write(String.valueOf(anotherAnswerChoice));
+                            writer.println();
+                            writer.flush();
                         }
                         anotherQuestion = JOptionPane.showConfirmDialog(null, "Is there another question?",
                                 "Sign Up", JOptionPane.YES_NO_OPTION);
+                        writer.write(String.valueOf(anotherQuestion));
+                        writer.println();
+                        writer.flush();
                     }
                 }
-                t.createQuiz(selectedCourse, quizQuestions, nameOfQuiz);
+                writer.write(selectedCourse);
+                writer.println();
+                writer.flush();
+
                 quizOptions.addItem(nameOfQuiz);
 
                 if (nameOfQuiz != "") {
@@ -431,16 +487,13 @@ public class TeacherGUI extends JComponent implements Runnable {
                 }
             }
         });
+
+        // GRADE QUIZ
         quizGradeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Socket socket = null;
                 try {
                     socket = new Socket("localhost", 4243);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -450,9 +503,16 @@ public class TeacherGUI extends JComponent implements Runnable {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                writer.write("courseSelect");
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                writer.write("gradeQuiz");
                 writer.println();
                 writer.flush();
+
                 String studentUsernameGrading = "";
                 do {
                     studentUsernameGrading = JOptionPane.showInputDialog(null, "What is the username of the student you want to grade",
@@ -466,111 +526,106 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                 } while ((studentUsernameGrading == null) || (studentUsernameGrading.isEmpty()));
 
+                writer.write(studentUsernameGrading);
+                writer.println();
+                writer.flush();
+
                 String studentQuizNameGrading = quizOptions.getSelectedItem().toString();
+                writer.write(studentQuizNameGrading);
+                writer.println();
+                writer.flush();
 
-                ArrayList<String> studentResponses =
-                        t.displayStudentSubmission(studentUsernameGrading,
-                                studentQuizNameGrading, selectedCourse);
-
-                if (!(studentResponses.get(0).equals("None"))) {
-
-                    int counter14 = 0;
-                    int totalGrade = 0;
-                    int numberQuestions = 0;
-
-
-                    ArrayList<String> gradedResponses = new ArrayList<String>();
-                    String print = "";
-                    while (counter14 < studentResponses.size()) {
-                        String[] splitStudentResponses =
-                                (studentResponses.get(counter14)).split("/");
-                        String[] splitBySpaces =
-                                (studentResponses.get(counter14)).split(" ");
-                        if (splitBySpaces[0].equals("Student")) {
-                            print = print + studentResponses.get(counter14) + "\n";
-                        } else {
-                            print = print + "Question: " + splitStudentResponses[0] + "\n";
-
-                            int counter23 = 1;
-                            while (counter23 < splitStudentResponses.length) {
-                                print = print + splitStudentResponses[counter23] + "\n";
-                                counter23++;
-                            }
-
-                            print = print + "What grade would you like to " +
-                                    "give this question " +
-                                    "between 0 and 100?";
-
-                            String initialGrade = "";
-
-                            do {
-                                initialGrade = JOptionPane.showInputDialog(null, print,
-                                        null, JOptionPane.QUESTION_MESSAGE);
-                                if ((initialGrade == null) || (initialGrade.isEmpty())) {
-                                    JOptionPane.showMessageDialog(null, "Grade cannot be empty!",
-                                            null,
-                                            JOptionPane.ERROR_MESSAGE);
-
-                                } //end if
-
-                            } while ((initialGrade == null) || (initialGrade.isEmpty()));
-                            print = "";
-
-                            numberQuestions++;
-
-                            boolean continueOn = true;
-                            int grade = 0;
-
-                            while (continueOn) {
-                                try {
-                                    grade = Integer.parseInt(initialGrade);
-                                    continueOn = false;
-                                } catch (NumberFormatException e1) {
-                                    JOptionPane.showMessageDialog(null, "Grade must be integer between 0 and 100",
-                                            null, JOptionPane.ERROR_MESSAGE);
-
-                                    do {
-                                        initialGrade = JOptionPane.showInputDialog(null, "What grade" +
-                                                        "would you like to give this question between 1 and 100",
-                                                null, JOptionPane.QUESTION_MESSAGE);
-                                        if ((initialGrade == null) || (initialGrade.isEmpty())) {
-                                            JOptionPane.showMessageDialog(null, "Grade cannot be empty!",
-                                                    null,
-                                                    JOptionPane.ERROR_MESSAGE);
-
-                                        } //end if
-
-                                    } while ((initialGrade == null) || (initialGrade.isEmpty()));
-                                }
-                            }
-
-                            totalGrade = totalGrade + grade;
-
-                            gradedResponses.add(studentResponses.get(counter14) + "/Grade: " +
-                                    grade + "/");
-                        }
-                        counter14++;
-                    }
-                    int totalGradedScore = totalGrade / numberQuestions;
-
-                    t.gradeSubmission(gradedResponses, studentUsernameGrading,
-                            studentQuizNameGrading, selectedCourse, totalGradedScore);
+                String studentResponses = null;
+                try {
+                    studentResponses = reader.readLine();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-                JOptionPane.showMessageDialog(null, "Quiz Graded!",
-                        null, JOptionPane.INFORMATION_MESSAGE);
-            }
+                int responseSize = 0;
+                try {
+                    responseSize = Integer.parseInt(reader.readLine());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                JOptionPane.showMessageDialog(null, studentResponses,
+                        "Time of Submission", JOptionPane.INFORMATION_MESSAGE);
+
+                if ((!(studentResponses == null )) || (!(studentResponses.equals("None")))) {
+                    int counter14 = 1;
+                    String print = "";
+                    while (counter14 < responseSize) {
+                        String print2 = "";
+                        print = "";
+                        try {
+                            print2 = reader.readLine();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        String[] printString = print2.split(">");
+                        int counter2 = 0;
+                        while (counter2 < printString.length) {
+                            print = print + "\n" + printString[counter2];
+                            counter2++;
+                        }
+
+                        String initialGrade = "";
+
+                        do {
+                            initialGrade = JOptionPane.showInputDialog(null, print,
+                                    null, JOptionPane.QUESTION_MESSAGE);
+                            if ((initialGrade == null) || (initialGrade.isEmpty())) {
+                                JOptionPane.showMessageDialog(null, "Grade cannot be empty!",
+                                        null,
+                                        JOptionPane.ERROR_MESSAGE);
+
+                            } //end if
+
+                        } while ((initialGrade == null) || (initialGrade.isEmpty()));
+
+                        boolean continueOn = true;
+                        int grade = 0;
+
+                        while (continueOn) {
+                            try {
+                                grade = Integer.parseInt(initialGrade);
+                                continueOn = false;
+                            } catch (NumberFormatException e1) {
+                                JOptionPane.showMessageDialog(null, "Grade must be integer between 0 and 100",
+                                        null, JOptionPane.ERROR_MESSAGE);
+
+                                do {
+                                    initialGrade = JOptionPane.showInputDialog(null, "What grade" +
+                                                    "would you like to give this question between 1 and 100",
+                                            null, JOptionPane.QUESTION_MESSAGE);
+                                    if ((initialGrade == null) || (initialGrade.isEmpty())) {
+                                        JOptionPane.showMessageDialog(null, "Grade cannot be empty!",
+                                                null,
+                                                JOptionPane.ERROR_MESSAGE);
+
+                                    } //end if
+
+                                } while ((initialGrade == null) || (initialGrade.isEmpty()));
+                            }
+                        }
+                        writer.write(initialGrade);
+                        writer.println();
+                        writer.flush();
+                        counter14++;
+                        }
+                    JOptionPane.showMessageDialog(null, "Quiz Graded!",
+                            null, JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
 
         });
+
+        // EDIT QUIZ
         quizEditButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Socket socket = null;
                 try {
                     socket = new Socket("localhost", 4243);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -580,13 +635,36 @@ public class TeacherGUI extends JComponent implements Runnable {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                writer.write("courseSelect");
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                writer.write("editQuiz");
                 writer.println();
                 writer.flush();
+
                 selectedQuiz = quizOptions.getSelectedItem().toString();
 
-                ArrayList<String> allQuestions = t.displayQuestions(selectedQuiz, selectedCourse);
+                writer.write(selectedQuiz);
+                writer.println();
+                writer.flush();
 
+                ArrayList<String> allQuestions = new ArrayList<>();
+                String questionsString = "";
+                try {
+                    questionsString = reader.readLine(); //  read the questions from the server
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                String[] studentSelectedArray = questionsString.split(">");
+
+                int counter = 0;
+                while (counter < studentSelectedArray.length) {
+                    allQuestions.add(studentSelectedArray[counter]);
+                    counter++;
+                }
 
                 int counter19 = 0;
                 String print = "";
@@ -612,8 +690,6 @@ public class TeacherGUI extends JComponent implements Runnable {
                         null, JOptionPane.INFORMATION_MESSAGE);
 
                 // now create new quiz
-                ArrayList<String> quizQuestions = new ArrayList<String>();
-
                 String nameOfQuiz = "";
                 String[] options2 = new String[2];
                 options2[0] = "Manually";
@@ -623,7 +699,11 @@ public class TeacherGUI extends JComponent implements Runnable {
                         "Sign Up", JOptionPane.QUESTION_MESSAGE, null, options2,
                         options2[0]);
                 String filename;
-                Teacher t = new Teacher();
+
+                writer.write(manuallyOrFromFile);
+                writer.println();
+                writer.flush();
+
                 if (manuallyOrFromFile.equals("File")) {
                     do {
                         filename = JOptionPane.showInputDialog(null, "What is the name of the file? The first line should be the title of the quizAll remaining lines should be questions with answers on the same line, separated by commas",
@@ -637,19 +717,24 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                     } while ((filename == null) || (filename.isEmpty()));
 
-                    t.writeQuizFromFile(selectedCourse, filename);
+                    writer.write(filename);
+                    writer.println();
+                    writer.flush();
+
                 } else {
-                    nameOfQuiz = quizTextField.getText();
+                    nameOfQuiz = quizOptions.getSelectedItem().toString();
+                    writer.write(nameOfQuiz);
+                    writer.println();
+                    writer.flush();
 
                     int randomizedOrNot = JOptionPane.showConfirmDialog(null, "Would you like the quiz to be randomized?",
                             "Sign Up", JOptionPane.YES_NO_OPTION);
 
+                    writer.write(String.valueOf(randomizedOrNot));
+                    writer.println();
+                    writer.flush();
+
                     ArrayList<String> newQuestions = new ArrayList<String>();
-                    if (randomizedOrNot == JOptionPane.YES_OPTION) {
-                        quizQuestions.add(String.valueOf(1));
-                    } else if (randomizedOrNot == JOptionPane.NO_OPTION) {
-                        quizQuestions.add(String.valueOf(2));
-                    }
 
                     String quizQuestion;
 
@@ -660,12 +745,12 @@ public class TeacherGUI extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                     "University Card",
                                     JOptionPane.ERROR_MESSAGE);
-
                         } //end if
-
                     } while ((quizQuestion == null) || (quizQuestion.isEmpty()));
 
-                    quizQuestions.add("\n" + quizQuestion);
+                    writer.write(quizQuestion);
+                    writer.println();
+                    writer.flush();
 
                     String answerChoice;
 
@@ -676,19 +761,23 @@ public class TeacherGUI extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                     "University Card",
                                     JOptionPane.ERROR_MESSAGE);
-
                         } //end if
-
                     } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
-                    quizQuestions.add("/" + answerChoice);
-
+                    writer.write(answerChoice);
+                    writer.println();
+                    writer.flush();
+                    //ended here
                     int anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                             "Sign Up", JOptionPane.YES_NO_OPTION);
 
+                    writer.write(String.valueOf(anotherAnswerChoice));
+                    writer.println();
+                    writer.flush();
+
                     while (anotherAnswerChoice == JOptionPane.YES_OPTION) {
                         do {
-                            answerChoice = JOptionPane.showInputDialog(null, "What is the first answer choice?",
+                            answerChoice = JOptionPane.showInputDialog(null, "What is the answer choice?",
                                     "Sign Up", JOptionPane.QUESTION_MESSAGE);
                             if ((answerChoice == null) || (answerChoice.isEmpty())) {
                                 JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
@@ -699,14 +788,25 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                         } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
+                        writer.write(answerChoice);
+                        writer.println();
+                        writer.flush();
 
-                        quizQuestions.add("/" + answerChoice);
                         anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                                 "Sign Up", JOptionPane.YES_NO_OPTION);
+
+                        writer.write(String.valueOf(anotherAnswerChoice));
+                        writer.println();
+                        writer.flush();
                     }
 
                     int anotherQuestion = JOptionPane.showConfirmDialog(null, "Would you like to add another question?",
                             "Sign Up", JOptionPane.YES_NO_OPTION);
+
+                    writer.write(String.valueOf(anotherQuestion));
+                    writer.println();
+                    writer.flush();
+
                     while (anotherQuestion == JOptionPane.YES_OPTION) {
 
                         do {
@@ -721,9 +821,12 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                         } while ((quizQuestion == null) || (quizQuestion.isEmpty()));
 
-                        quizQuestions.add("\n" + quizQuestion);
+                        writer.write(quizQuestion);
+                        writer.println();
+                        writer.flush();
+
                         do {
-                            answerChoice = JOptionPane.showInputDialog(null, "What is the first " +
+                            answerChoice = JOptionPane.showInputDialog(null, "What is the " +
                                             "answer choice?",
                                     "Sign Up", JOptionPane.QUESTION_MESSAGE);
                             if ((answerChoice == null) || (answerChoice.isEmpty())) {
@@ -735,10 +838,16 @@ public class TeacherGUI extends JComponent implements Runnable {
 
                         } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
-                        quizQuestions.add("/" + answerChoice);
+                        writer.write(answerChoice);
+                        writer.println();
+                        writer.flush();
 
                         anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                                 "Sign Up", JOptionPane.YES_NO_OPTION);
+                        writer.write(String.valueOf(anotherAnswerChoice));
+                        writer.println();
+                        writer.flush();
+
                         while (anotherAnswerChoice == JOptionPane.YES_OPTION) {
                             do {
                                 answerChoice = JOptionPane.showInputDialog(null, "What is the next answer choice?",
@@ -751,23 +860,36 @@ public class TeacherGUI extends JComponent implements Runnable {
                                 } //end if
 
                             } while ((answerChoice == null) || (answerChoice.isEmpty()));
-
-                            quizQuestions.add("/" + answerChoice);
+                            writer.write(answerChoice);
+                            writer.println();
+                            writer.flush();
 
                             anotherAnswerChoice = JOptionPane.showConfirmDialog(null, "Is there another answer choice?",
                                     "Sign Up", JOptionPane.YES_NO_OPTION);
+
+                            writer.write(String.valueOf(anotherAnswerChoice));
+                            writer.println();
+                            writer.flush();
                         }
                         anotherQuestion = JOptionPane.showConfirmDialog(null, "Is there another question?",
                                 "Sign Up", JOptionPane.YES_NO_OPTION);
+                        writer.write(String.valueOf(anotherQuestion));
+                        writer.println();
+                        writer.flush();
                     }
                 }
-                t.createQuiz(selectedCourse, quizQuestions, nameOfQuiz);
+                writer.write(selectedCourse);
+                writer.println();
+                writer.flush();
+
                 quizOptions.addItem(nameOfQuiz);
 
                 if (nameOfQuiz != "") {
                     JOptionPane.showMessageDialog(null, "Quiz Created!",
                             null, JOptionPane.INFORMATION_MESSAGE);
                 }
+
+
             }
         });
 

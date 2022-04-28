@@ -327,6 +327,7 @@ public class Teacher {
                 e.printStackTrace();
             }
         } else {
+            System.out.println("There is no student submission for this quiz.");
             JOptionPane.showMessageDialog(null, "There is no student submission for this quiz.",
                     null, JOptionPane.INFORMATION_MESSAGE);
             studentAnswers.add("No submission");

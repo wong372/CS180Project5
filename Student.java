@@ -68,8 +68,6 @@ public class Student {
                 e.printStackTrace();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "There is no graded submission available.",
-                    null, JOptionPane.INFORMATION_MESSAGE);
             studentAnswers.add("None");
         }
 

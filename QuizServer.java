@@ -128,7 +128,7 @@ public class QuizServer {
                     int counter = 0;
                     String totalQuizzesString = "";
                     while (counter < totalQuizzes.size()) {
-                        totalQuizzesString = totalQuizzesString  + totalQuizzes.get(counter) + "/";
+                        totalQuizzesString = totalQuizzesString + totalQuizzes.get(counter) + "/";
                         counter++;
                     }
                     writer.write(totalQuizzesString);
@@ -169,6 +169,218 @@ public class QuizServer {
                     }
                     writer.close();
                     reader.close();
+                } else if (chosenOption.equals("createQuiz")) {
+                    String manualOrFile = reader.readLine();
+                    String nameOfQuiz = "";
+                    ArrayList<String> quizQuestions = new ArrayList<String>();
+
+                    if (manualOrFile.equals("File")) {
+                        String filename = reader.readLine();
+
+                        t.writeQuizFromFile(selectedCourse, filename);
+                    } else {
+                        nameOfQuiz = reader.readLine();
+                        String randomizedOrNot = reader.readLine();
+                        System.out.println("r" + randomizedOrNot);
+
+                        ArrayList<String> newQuestions = new ArrayList<String>();
+                        if (randomizedOrNot.equals("0")) {
+                            quizQuestions.add("1");
+                        } else if (randomizedOrNot.equals("1")) {
+                            quizQuestions.add("2");
+                        }
+
+                        String quizQuestion = reader.readLine();
+
+                        quizQuestions.add("\n" + quizQuestion);
+
+                        String answerChoice = reader.readLine();
+
+                        quizQuestions.add("/" + answerChoice);
+                        //ended here
+
+                        String anotherAnswerChoice = reader.readLine();
+
+                        while (anotherAnswerChoice.equals("0")) {
+                            answerChoice = reader.readLine();
+
+                            quizQuestions.add("/" + answerChoice);
+                            anotherAnswerChoice = reader.readLine();
+                        }
+
+                        String anotherQuestion = reader.readLine();
+
+                        while (anotherQuestion.equals("0")) { // if another question is yes
+                            quizQuestion = reader.readLine();
+
+                            quizQuestions.add("\n" + quizQuestion);
+
+                            answerChoice = reader.readLine();
+
+                            quizQuestions.add("/" + answerChoice);
+
+                            anotherAnswerChoice = reader.readLine();
+
+                            while (anotherAnswerChoice.equals("0")) {
+                                answerChoice = reader.readLine();
+
+                                quizQuestions.add("/" + answerChoice);
+
+                                anotherAnswerChoice = reader.readLine();
+                            }
+                            anotherQuestion = reader.readLine();
+                        }
+                    }
+                    selectedCourse = reader.readLine();
+                    t.createQuiz(selectedCourse, quizQuestions, nameOfQuiz);
+                } else if (chosenOption.equals("editQuiz")) {
+                    selectedQuiz = reader.readLine();
+
+                    ArrayList<String> allQuestions = t.displayQuestions(selectedQuiz, selectedCourse);
+
+                    int counter2 = 0;
+                    String allQString = "";
+                    while (counter2 < allQuestions.size()) {
+                        allQString = allQString + allQuestions.get(counter2) + ">";
+                        counter2++;
+                    }
+                    writer.write(allQString);
+                    writer.println();
+                    writer.flush();
+
+                    // now create new quiz
+                    ArrayList<String> newQuestions = new ArrayList<String>();
+
+                    String manualOrFile = reader.readLine();
+                    String nameOfQuiz = "";
+
+                    if (manualOrFile.equals("File")) {
+                        String filename = reader.readLine();
+
+                        t.writeQuizFromFile(selectedCourse, filename);
+                    } else {
+                        nameOfQuiz = reader.readLine();
+                        String randomizedOrNot = reader.readLine();
+                        System.out.println("r" + randomizedOrNot);
+
+                        if (randomizedOrNot.equals("0")) {
+                            newQuestions.add("1");
+                        } else if (randomizedOrNot.equals("1")) {
+                            newQuestions.add("2");
+                        }
+
+                        String quizQuestion = reader.readLine();
+
+                        newQuestions.add("\n" + quizQuestion);
+
+                        String answerChoice = reader.readLine();
+
+                        newQuestions.add("/" + answerChoice);
+                        //ended here
+
+                        String anotherAnswerChoice = reader.readLine();
+
+                        while (anotherAnswerChoice.equals("0")) {
+                            answerChoice = reader.readLine();
+
+                            newQuestions.add("/" + answerChoice);
+                            anotherAnswerChoice = reader.readLine();
+                        }
+
+                        String anotherQuestion = reader.readLine();
+
+                        while (anotherQuestion.equals("0")) { // if another question is yes
+                            quizQuestion = reader.readLine();
+
+                            newQuestions.add("\n" + quizQuestion);
+
+                            answerChoice = reader.readLine();
+
+                            newQuestions.add("/" + answerChoice);
+
+                            anotherAnswerChoice = reader.readLine();
+
+                            while (anotherAnswerChoice.equals("0")) {
+                                answerChoice = reader.readLine();
+
+                                newQuestions.add("/" + answerChoice);
+
+                                anotherAnswerChoice = reader.readLine();
+                            }
+                            anotherQuestion = reader.readLine();
+                        }
+                    }
+                    selectedCourse = reader.readLine();
+                    t.editQuizQuestions(nameOfQuiz, newQuestions, selectedCourse);
+
+                } else if (chosenOption.equals("gradeQuiz")) {
+                    String studentUsername = reader.readLine();
+                    System.out.println(studentUsername);
+
+                    String studentQuizName = reader.readLine();
+                    System.out.println(studentQuizName);
+                    int grade = 0;
+
+                    ArrayList<String> studentResponses =
+                            t.displayStudentSubmission(studentUsername,
+                                    studentQuizName, selectedCourse);
+                    writer.write(studentResponses.get(0));
+                    writer.println();
+                    writer.flush();
+                    System.out.println(studentResponses.get(0));
+                    System.out.println(studentResponses.get(1));
+                    System.out.println(studentResponses.get(2));
+                    System.out.println(studentResponses.get(3));
+
+                    writer.write(String.valueOf(studentResponses.size()));
+                    writer.println();
+                    writer.flush();
+
+                    if (!(studentResponses.get(0).equals("None"))) {
+
+                        int counter14 = 1;
+                        int totalGrade = 0;
+                        int numberQuestions = 0;
+
+                        ArrayList<String> gradedResponses = new ArrayList<String>();
+                        String print = "";
+                        while (counter14 < studentResponses.size()) {
+                            String[] splitStudentResponses =
+                                    (studentResponses.get(counter14)).split("/");
+                            print = print + "Question: " + counter14 + splitStudentResponses[0] + ">";
+
+                            int counter23 = 1;
+                            while (counter23 < splitStudentResponses.length) {
+                                print = print + splitStudentResponses[counter23] + ">";
+                                counter23++;
+                            }
+
+                            print = print + "What grade would you like to " +
+                                    "give this question " +
+                                    "between 0 and 100?";
+                            System.out.println(print);
+
+
+                            String initialGrade = "";
+
+                            writer.write(print);
+                            writer.println();
+                            writer.flush();
+
+                            String gradeString = reader.readLine();
+                            grade = Integer.parseInt(gradeString);
+                            print = "";
+                            totalGrade = totalGrade + grade;
+                            gradedResponses.add(studentResponses.get(counter14) + "/Grade: " +
+                                    grade + "/");
+                            counter14++;
+                        }
+
+                        int totalGradedScore = totalGrade / numberQuestions;
+
+                        t.gradeSubmission(gradedResponses, studentUsername,
+                                studentQuizName, selectedCourse, totalGradedScore);
+                    }
                 }
             }
             writer.close();
