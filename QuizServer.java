@@ -32,5 +32,4 @@ public class QuizServer {
             new Thread(qc).start();
         }
     }
-
 }
