@@ -13,6 +13,17 @@ import java.time.LocalDateTime;
  */
 import java.util.Scanner;
 
+/**
+ * Quiz
+ *
+ * Contains methods for file processing for the login process of Project 5.
+ *
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ *
+ * @version 5/1/22
+ *
+ */
+
 public class Quiz {
 
     private static final String LOGINFILENAME = "logins.txt";
