@@ -3,13 +3,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 /**
- * A program that has student methods.
+ * A program that has teacher methods to write and read to files that can be called within the server.
  *
  * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 02 -- Challenge</p>
  *
- * @author Katie Testin
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
  * @version April 11, 2021
  */
+
 public class Teacher {
     private String username;
 
