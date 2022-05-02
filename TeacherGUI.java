@@ -309,9 +309,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null, "Filename cannot be empty!",
                                     "University Card",
                                     JOptionPane.ERROR_MESSAGE);
-
                         } //end if
-
                     } while ((filename == null) || (filename.isEmpty()));
 
                     writer.write(filename);
@@ -380,9 +378,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                                 JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                         "University Card",
                                         JOptionPane.ERROR_MESSAGE);
-
                             } //end if
-
                         } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
                         writer.write(answerChoice);
@@ -413,9 +409,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                                 JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                         "University Card",
                                         JOptionPane.ERROR_MESSAGE);
-
                             } //end if
-
                         } while ((quizQuestion == null) || (quizQuestion.isEmpty()));
 
                         writer.write(quizQuestion);
@@ -430,9 +424,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                                 JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                         "University Card",
                                         JOptionPane.ERROR_MESSAGE);
-
                             } //end if
-
                         } while ((answerChoice == null) || (answerChoice.isEmpty()));
 
                         writer.write(answerChoice);
@@ -453,9 +445,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                                     JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                             "University Card",
                                             JOptionPane.ERROR_MESSAGE);
-
                                 } //end if
-
                             } while ((answerChoice == null) || (answerChoice.isEmpty()));
                             writer.write(answerChoice);
                             writer.println();
@@ -521,9 +511,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                         JOptionPane.showMessageDialog(null, "Username cannot be empty!",
                                 "University Card",
                                 JOptionPane.ERROR_MESSAGE);
-
                     } //end if
-
                 } while ((studentUsernameGrading == null) || (studentUsernameGrading.isEmpty()));
 
                 writer.write(studentUsernameGrading);
@@ -578,9 +566,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                                 JOptionPane.showMessageDialog(null, "Grade cannot be empty!",
                                         null,
                                         JOptionPane.ERROR_MESSAGE);
-
                             } //end if
-
                         } while ((initialGrade == null) || (initialGrade.isEmpty()));
 
                         boolean continueOn = true;
@@ -602,9 +588,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                                         JOptionPane.showMessageDialog(null, "Grade cannot be empty!",
                                                 null,
                                                 JOptionPane.ERROR_MESSAGE);
-
                                     } //end if
-
                                 } while ((initialGrade == null) || (initialGrade.isEmpty()));
                             }
                         }
@@ -617,7 +601,6 @@ public class TeacherGUI extends JComponent implements Runnable {
                             null, JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
-
         });
 
         // EDIT QUIZ
@@ -669,7 +652,6 @@ public class TeacherGUI extends JComponent implements Runnable {
                 int counter19 = 0;
                 String print = "";
 
-
                 while (counter19 < allQuestions.size()) {
                     String[] questionAndAnswerSplitUp2 = (allQuestions.get(counter19)).split("/");
                     print = print + "Question: " + questionAndAnswerSplitUp2[0] + "\n";
@@ -712,9 +694,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null, "Filename cannot be empty!",
                                     "University Card",
                                     JOptionPane.ERROR_MESSAGE);
-
                         } //end if
-
                     } while ((filename == null) || (filename.isEmpty()));
 
                     writer.write(filename);
@@ -856,9 +836,7 @@ public class TeacherGUI extends JComponent implements Runnable {
                                     JOptionPane.showMessageDialog(null, "Name of Quiz cannot be empty!",
                                             "University Card",
                                             JOptionPane.ERROR_MESSAGE);
-
                                 } //end if
-
                             } while ((answerChoice == null) || (answerChoice.isEmpty()));
                             writer.write(answerChoice);
                             writer.println();
@@ -888,8 +866,6 @@ public class TeacherGUI extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Quiz Created!",
                             null, JOptionPane.INFORMATION_MESSAGE);
                 }
-
-
             }
         });
 
@@ -933,7 +909,6 @@ public class TeacherGUI extends JComponent implements Runnable {
                                 JOptionPane.ERROR_MESSAGE);
 
                     } //end if
-
                 } while ((newPassword == null) || (newPassword.isEmpty()));
 
                 writer.write(newPassword);
@@ -985,8 +960,7 @@ public class TeacherGUI extends JComponent implements Runnable {
             }
         });
     }
-
-
+    
     public TeacherGUI(String username, int role) {
         this.username = username;
         this.role = role;
@@ -994,9 +968,5 @@ public class TeacherGUI extends JComponent implements Runnable {
             public void mousePressed(MouseEvent e) {
             }
         });
-
-
     }
-
-
 }
