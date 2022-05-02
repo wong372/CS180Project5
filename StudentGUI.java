@@ -456,7 +456,7 @@ public class StudentGUI extends JComponent implements Runnable {
                         ex.printStackTrace();
                     }
                     JOptionPane.showMessageDialog(null, print,
-                                null, JOptionPane.INFORMATION_MESSAGE);
+                            null, JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "No graded submission",
                             null, JOptionPane.INFORMATION_MESSAGE);

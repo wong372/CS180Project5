@@ -539,7 +539,7 @@ public class QuizServer {
                         writer.flush();
                     }
                 }
-                }
+            }
             writer.close();
             reader.close();
         }

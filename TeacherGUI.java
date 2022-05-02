@@ -596,11 +596,11 @@ public class TeacherGUI extends JComponent implements Runnable {
                         writer.println();
                         writer.flush();
                         counter14++;
-                        }
+                    }
                     JOptionPane.showMessageDialog(null, "Quiz Graded!",
                             null, JOptionPane.INFORMATION_MESSAGE);
-                    }
                 }
+            }
         });
 
         // EDIT QUIZ
@@ -960,7 +960,7 @@ public class TeacherGUI extends JComponent implements Runnable {
             }
         });
     }
-    
+
     public TeacherGUI(String username, int role) {
         this.username = username;
         this.role = role;
