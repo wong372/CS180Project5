@@ -12,12 +12,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 /**
- * A Simple Client.
+ * A client class the takes in all the user inputs for the quiz program and sends them to the server for processing.
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 11 -- Walkthrough</p>
+ * <p>Purdue University -- CS18000 -- Spring 2022 -- Project 5 </p>
  *
- * @author Purdue CS
- * @version January 10, 2022
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ * @version May 1, 2022
  */
 public class QuizClient {
 
