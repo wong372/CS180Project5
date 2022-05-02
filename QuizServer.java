@@ -11,12 +11,12 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * A Simple Server
+ * A server class that creates the thread to start the server and allow for concurrent users to connect.
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 11 -- Walkthrough</p>
+ * <p>Purdue University -- CS18000 -- Spring 2022 -- Project 5 </p>
  *
- * @author Purdue CS
- * @version January 10, 2022
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ * @version May 1, 2022
  */
 public class QuizServer {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
