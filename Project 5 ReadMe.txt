@@ -1,4 +1,4 @@
-# ReadMe Document
+ReadMe Document
 
 Changes/Fixes to Project 4:
 * It is no longer possible to select an incorrect answer due to the implementation of dropdown menus rather than the typing out of answers
@@ -16,21 +16,17 @@ To compile each class:
 * Teacher.java: In the terminal, type “javac Teacher.java”
 * TeacherGUI.java: In the terminal, type “javac TeacherGUI.java”
 
-
 To run the server manually: In the terminal, type “java QuizServer”
 To run the client(s) manually*: In the terminal, type “java QuizClient” and “java QuizClient2”
 
-
 *Note: This is just to test the test cases we have provided in Tests.md. A different method is used to test more than two simultaneous clients.
 ________________
-
 
 Part Submission:
 Ashley Wong - Submitted Report on Brightspace.
 Aaron Basiletti - Submitted Vocareum workspace.
 Saahil Sanghi: Submitted Presentation video on Brightspace. 
 ________________
-
 
 Classes:
 Quiz.java
