@@ -25,7 +25,7 @@ ________________
 Part Submission:
 Ashley Wong - Submitted Report on Brightspace.
 Aaron Basiletti - Submitted Vocareum workspace.
-Saahil Sanghi: Submitted Presentation video on Brightspace. 
+Saahil Sanghi - Submitted Presentation video on Brightspace. 
 ________________
 
 Classes:
