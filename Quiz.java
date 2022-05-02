@@ -3,27 +3,18 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-/**
- * A program that runs the quiz class.
- *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 02 -- Challenge</p>
- *
- * @author Katie, Aaron, Ashley, Krish, Saahil
- * @version April 11, 2021
- */
 import java.util.Scanner;
 
 /**
  * Quiz
  *
- * Contains methods for file processing for the login process of Project 5.
+ * This program contains methods for file processing for the login process of Project 5.
  *
  * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
  *
- * @version 5/1/22
+ * @version May 02, 2022
  *
  */
-
 public class Quiz {
 
     private static final String LOGINFILENAME = "logins.txt";
