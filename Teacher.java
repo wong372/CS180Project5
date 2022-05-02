@@ -427,7 +427,4 @@ public class Teacher {
         }
         return quizName;
     }
-
-
-
 }
