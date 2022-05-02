@@ -11,14 +11,18 @@ import java.util.Scanner;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
 /**
- * A Simple Client.
+ * QuizClient
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 11 -- Walkthrough</p>
+ * Handles the GUI for the login process and calls GUI classes if login is a success.
  *
- * @author Purdue CS
- * @version January 10, 2022
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ *
+ * @version 5/1/22
+ *
  */
+
 public class QuizClient {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
@@ -71,7 +75,7 @@ public class QuizClient {
             options1[1] = "Log in";
             signUpOrLogIn = (String) JOptionPane.showInputDialog(null,
                     "Choose an option to continue",
-                    "University Card", JOptionPane.QUESTION_MESSAGE, null, options1,
+                    "Log In/Sign Up", JOptionPane.QUESTION_MESSAGE, null, options1,
                     options1[1]);
 
             writer.write(signUpOrLogIn); // first send
@@ -85,7 +89,7 @@ public class QuizClient {
                             "Sign Up", JOptionPane.QUESTION_MESSAGE);
                     if ((username == null) || (username.isEmpty())) {
                         JOptionPane.showMessageDialog(null, "Username cannot be empty!",
-                                "University Card",
+                                "Log In/Sign Up",
                                 JOptionPane.ERROR_MESSAGE);
 
                     } //end if
@@ -105,12 +109,12 @@ public class QuizClient {
                 } else {
                     do {
                         do {
-                            password = JOptionPane.showInputDialog(null, "What do you want your " +
-                                            "password to be?",
+                            password = JOptionPane.showInputDialog(null, "What do you want your" +
+                                            " password to be?",
                                     "Sign Up", JOptionPane.QUESTION_MESSAGE);
                             if ((password == null) || (password.isEmpty())) {
                                 JOptionPane.showMessageDialog(null, "Password cannot be empty!",
-                                        "University Card",
+                                        "Log In/Sign Up",
                                         JOptionPane.ERROR_MESSAGE);
 
                             } //end if
@@ -152,7 +156,7 @@ public class QuizClient {
                             "Log in", JOptionPane.QUESTION_MESSAGE);
                     if ((username == null) || (username.isEmpty())) {
                         JOptionPane.showMessageDialog(null, "Username cannot be empty!",
-                                "University Card",
+                                "Log In/Sign Up",
                                 JOptionPane.ERROR_MESSAGE);
                     } //end if
                 } while ((username == null) || (username.isEmpty()));
@@ -169,7 +173,7 @@ public class QuizClient {
                             "Log in", JOptionPane.QUESTION_MESSAGE);
                     if ((password == null) || (password.isEmpty())) {
                         JOptionPane.showMessageDialog(null, "Password cannot be empty!",
-                                "University Card",
+                                "Log In/Sign Up",
                                 JOptionPane.ERROR_MESSAGE);
 
                     } //end if
