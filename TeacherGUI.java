@@ -696,11 +696,11 @@ public class TeacherGUI extends JComponent implements Runnable {
                         writer.println();
                         writer.flush();
                         counter14++;
-                        }
+                    }
                     JOptionPane.showMessageDialog(null, "Quiz Graded!",
                             null, JOptionPane.INFORMATION_MESSAGE);
-                    }
                 }
+            }
 
         });
 

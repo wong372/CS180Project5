@@ -19,7 +19,7 @@ import java.awt.event.*;
  * @author Purdue CS
  * @version January 10, 2022
  */
-public class QuizClient {
+public class QuizClient2 {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         // set up the client

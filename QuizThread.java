@@ -4,6 +4,17 @@ import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * QuizThread
+ *
+ * A program containing the server functionality (file processing) of Project 5.
+ *
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ *
+ * @version 5/1/22
+ *
+ */
+
 public class QuizThread implements Runnable {
     Socket threadSocket;
     public QuizThread(Socket socket) {
@@ -150,7 +161,7 @@ public class QuizThread implements Runnable {
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
-                            quiz.writeFileForSignUp(LOGINFILENAME, username, newPassword, role1); // write the new password to file
+                            quiz.writeFileForSignUp(LOGINFILENAME, username, newPassword, role1); // write new password to file
                         } else if (chosenOption.equals("deleteAccount")) {
                             username = reader.readLine();
                             try {
