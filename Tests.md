@@ -52,6 +52,7 @@ Steps:
   4. User selects "Manually" from the dropdown in the new window and selects "Ok" to take the quiz manually.
   5. User selects the desired answer from the dropdown on the new window that appears, and select "Ok". 
   6. Repeat step 5 for all questions. 
+  7. User selects "Ok" on the new window saying that the submission has been recorded. 
 
 Expected: Quiz is taken and submission stored. 
 
