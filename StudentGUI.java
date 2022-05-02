@@ -7,12 +7,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- * A class that allows the user to draw.
+ * StudentGUI
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 11 -- Challenge</p>
+ * Complex GUI component for student operations.
  *
- * @author Katie Testin
- * @version April 5, 2022
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ *
+ * @version 5/1/22
+ *
  */
 
 public class StudentGUI extends JComponent implements Runnable {
@@ -24,6 +26,7 @@ public class StudentGUI extends JComponent implements Runnable {
     String selectedQuiz;
     ArrayList<String> courses = new ArrayList<>();
     ArrayList<String> totalQuizzes = new ArrayList<>();
+    ArrayList<String> totalCourses = new ArrayList<>();
     ArrayList<String> studentSelectedQuestions = new ArrayList<>();
     String newPassword;
     File LOGINFILENAME = new File("logins.txt");
@@ -43,6 +46,7 @@ public class StudentGUI extends JComponent implements Runnable {
     JButton editPasswordButton;
     JButton deleteAccountButton;
     JButton logOutButton;
+    JButton refreshButton;
 
     StudentGUI studentGUI;
 
@@ -89,6 +93,7 @@ public class StudentGUI extends JComponent implements Runnable {
         editPasswordButton = new JButton("Edit Password");
         deleteAccountButton = new JButton("Delete Account");
         logOutButton = new JButton("Log Out");
+        refreshButton  = new JButton("Refresh");
 
         JPanel topPanel = new JPanel();
         topPanel.setBackground(color);
@@ -112,7 +117,88 @@ public class StudentGUI extends JComponent implements Runnable {
         editLeave.add(editPasswordButton);
         editLeave.add(deleteAccountButton);
         editLeave.add(logOutButton);
+        editLeave.add(refreshButton);
         content.add(editLeave, BorderLayout.SOUTH);
+
+        refreshButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Socket socket = null;
+                try {
+                    socket = new Socket("localhost", 4243);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(socket.getOutputStream());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                writer.write("refresh");
+                writer.println();
+                writer.flush();
+
+                selectedCourse = courseOptions.getSelectedItem().toString();
+                writer.write(selectedCourse);
+                writer.println();
+                writer.flush();
+
+                String totalQuizzesString = "";
+                try {
+                    totalQuizzesString = reader.readLine(); //  read the quizzes from the server
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                String[] totalQuizzesArray = totalQuizzesString.split("/");
+
+                totalQuizzes.clear();
+
+                int counter = 0;
+                while (counter < totalQuizzesArray.length) {
+                    totalQuizzes.add(totalQuizzesArray[counter]);
+                    counter++;
+                }
+
+                quizOptions.removeAllItems(); // take out the current quizzes
+                int i = 0;
+                while (i < totalQuizzes.size()) {
+                    quizOptions.addItem(totalQuizzes.get(i));
+                    i++;
+                }
+
+                //read in the new courses
+
+                String totalCoursesString = "";
+                try {
+                    totalCoursesString = reader.readLine(); //  read the courses from the server
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                String[] totalCoursesArray = totalCoursesString.split("/");
+
+                totalCourses.clear();
+
+                int counter2 = 0;
+                while (counter2 < totalCoursesArray.length) {
+                    totalCourses.add(totalCoursesArray[counter2]);
+                    counter2++;
+                }
+
+                courseOptions.removeAllItems(); // take out the current quizzes
+                int i2 = 0;
+                while (i2 < totalCourses.size()) {
+                    courseOptions.addItem(totalCourses.get(i2));
+                    i2++;
+                }
+            }
+        });
 
         courseSelectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -340,7 +426,9 @@ public class StudentGUI extends JComponent implements Runnable {
                     String filename;
                     if (manuallyOrFromFile.equals("File")) {
                         do {
-                            filename = JOptionPane.showInputDialog(null, "What is the name of the file? Each line should be the answer to a question.",
+                            filename = JOptionPane.showInputDialog(null,
+                                    "What is the name of the file? Each line should be the answer to " +
+                                            "a question.",
                                     "Sign Up", JOptionPane.QUESTION_MESSAGE);
                             if ((filename == null) || (filename.isEmpty())) {
                                 JOptionPane.showMessageDialog(null, "Filename cannot be empty!",
@@ -456,7 +544,7 @@ public class StudentGUI extends JComponent implements Runnable {
                         ex.printStackTrace();
                     }
                     JOptionPane.showMessageDialog(null, print,
-                                null, JOptionPane.INFORMATION_MESSAGE);
+                            null, JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "No graded submission",
                             null, JOptionPane.INFORMATION_MESSAGE);
