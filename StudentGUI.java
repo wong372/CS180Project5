@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- * A class that creates the GUI for the student to view and interact with.
+ * A class that allows the user to draw.
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Project 5 </p>
+ * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 11 -- Challenge</p>
  *
- * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
- * @version May 1, 2022
+ * @author Katie Testin
+ * @version April 5, 2022
  */
 
 public class StudentGUI extends JComponent implements Runnable {
@@ -120,49 +120,66 @@ public class StudentGUI extends JComponent implements Runnable {
 
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 Socket socket = null;
                 try {
                     socket = new Socket("localhost", 4243);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                System.out.println("Socket Connected");
                 PrintWriter writer = null;
                 try {
                     writer = new PrintWriter(socket.getOutputStream());
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                System.out.println("Test 2 success");
                 BufferedReader reader = null;
                 try {
                     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                System.out.println("Test 3 success");
 
                 writer.write("refresh");
                 writer.println();
                 writer.flush();
 
+                System.out.println("refresh written");
+
                 selectedCourse = courseOptions.getSelectedItem().toString();
                 writer.write(selectedCourse);
                 writer.println();
                 writer.flush();
+                System.out.println("selected course");
 
                 String totalQuizzesString = "";
                 try {
-                    totalQuizzesString = reader.readLine(); //  read the quizzes from the server
+                    if (reader.ready()) {
+                        try {
+                            totalQuizzesString = reader.readLine(); //  read the quizzes from the server
+                            System.out.println("test123");
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+
                 String[] totalQuizzesArray = totalQuizzesString.split("/");
 
                 totalQuizzes.clear();
+                System.out.println("quizzes cleared");
 
                 int counter = 0;
                 while (counter < totalQuizzesArray.length) {
                     totalQuizzes.add(totalQuizzesArray[counter]);
                     counter++;
                 }
+                System.out.println("quizzes added");
 
                 quizOptions.removeAllItems(); // take out the current quizzes
                 int i = 0;
@@ -170,24 +187,35 @@ public class StudentGUI extends JComponent implements Runnable {
                     quizOptions.addItem(totalQuizzes.get(i));
                     i++;
                 }
+                System.out.println("quizzes removed");
 
                 //read in the new courses
 
                 String totalCoursesString = "";
                 try {
-                    totalCoursesString = reader.readLine(); //  read the courses from the server
+                    if (reader.ready()) {
+                        try {
+                            totalCoursesString = reader.readLine(); //  read the courses from the server
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+
                 String[] totalCoursesArray = totalCoursesString.split("/");
 
                 totalCourses.clear();
+
+                System.out.println("courses cleared");
 
                 int counter2 = 0;
                 while (counter2 < totalCoursesArray.length) {
                     totalCourses.add(totalCoursesArray[counter2]);
                     counter2++;
                 }
+                System.out.println("courses added");
 
                 courseOptions.removeAllItems(); // take out the current quizzes
                 int i2 = 0;
@@ -195,7 +223,10 @@ public class StudentGUI extends JComponent implements Runnable {
                     courseOptions.addItem(totalCourses.get(i2));
                     i2++;
                 }
+                System.out.println("final test complete");
+                SwingUtilities.invokeLater(new StudentGUI(username, 2));
             }
+
         });
 
         courseSelectButton.addActionListener(new ActionListener() {
