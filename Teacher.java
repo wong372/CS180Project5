@@ -2,14 +2,18 @@ import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
+
 /**
- * A program that has student methods.
+ * Teacher
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 02 -- Challenge</p>
+ * Handles file processing for Teacher operations.
  *
- * @author Katie Testin
- * @version April 11, 2021
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ *
+ * @version 5/1/22
+ *
  */
+
 public class Teacher {
     private String username;
 
@@ -427,4 +431,7 @@ public class Teacher {
         }
         return quizName;
     }
+
+
+
 }
