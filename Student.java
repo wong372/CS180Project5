@@ -2,14 +2,18 @@ import javax.swing.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 /**
- * A program that has student methods.
+ * Student
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 02 -- Challenge</p>
+ * Handles the file processing for student operations.
  *
- * @author Katie Testin
- * @version April 11, 2021
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ *
+ * @version 5/1/22
+ *
  */
+
 public class Student {
     private String username;
 
