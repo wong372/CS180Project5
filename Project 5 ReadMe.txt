@@ -1,4 +1,5 @@
-﻿ReadMe Document
+# ReadMe Document
+
 Changes/Fixes to Project 4:
 * It is no longer possible to select an incorrect answer due to the implementation of dropdown menus rather than the typing out of answers
 * Added JavaDocs to the top of all of our classes
