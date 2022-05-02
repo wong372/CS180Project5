@@ -7,9 +7,10 @@ import java.util.ArrayList;
  *
  * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 02 -- Challenge</p>
  *
- * @author Katie Testin
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
  * @version April 11, 2021
  */
+
 public class Student {
     private String username;
 
