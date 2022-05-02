@@ -49,4 +49,10 @@ Steps:
   1. User signs in with a **student** account (see Test 1 for details).
   2. User selects the desired course in the top left dropdown menu and presses "Select".
   3. User selects the desired quiz in the bottom left dropdown menu and presses "Take Quiz". 
-  4. User selects the 
+  4. User selects "Manually" from the dropdown in the new window and selects "Ok" to take the quiz manually.
+  5. User selects the desired answer from the dropdown on the new window that appears, and select "Ok". 
+  6. Repeat step 5 for all questions. 
+
+Expected: Quiz is taken and submission stored. 
+
+Status: Passed
