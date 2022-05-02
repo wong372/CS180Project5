@@ -6,12 +6,12 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * A class that allows the user to draw.
+ * A class that creates the GUI for the teacher to view and interact with.
  *
- * <p>Purdue University -- CS18000 -- Spring 2022 -- Homework 11 -- Challenge</p>
+ * <p>Purdue University -- CS18000 -- Spring 2022 -- Project 5 </p>
  *
- * @author Katie Testin
- * @version April 5, 2022
+ * @author Katie Testin, Aaron Basiletti, Ashley Wong, Saahil Sanghi, L21
+ * @version May 1, 2022
  */
 
 public class TeacherGUI extends JComponent implements Runnable {
